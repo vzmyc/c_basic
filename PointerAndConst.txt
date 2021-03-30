@@ -1,0 +1,91 @@
+[포인터와 const (pointer and const)]
+지금까지 보았던 모든 포인터는 상수(const)가 아닌 값을 가리키는 비-상수(non-const) 포인터다.
+
+ex1>
+int value = 5;
+int* ptr = &value;
+*ptr = 6; // change value to 6
+하지만 값이 상수인 경우에는 어떻게 될까?
+
+ex2>
+const int value = 5; // value is const
+int ptr = &value; // compile error: cannot convert const int* to int*
+*ptr = 6; // change value to 6
+위 코드는 컴파일되지 않는다. 
+상수 변수는 값을 변경할 수 없다. 
+만약 상수가 아닌 포인터가 상수 변수를 가리킨 다음에 역참조하여 값을 바꿀 수 있다면,
+const의 의도를 위반하게 되므로 상수가 아닌 포인터는 상수 변수를 가리킬 수 없다.
+
+[Pointer to const value]
+상수를 가리키는 포인터는 상수 변수의 주소를 가리키는 (non-const) 포인터다.
+
+상수 변수에 대한 포인터를 선언하려면 자료형 앞에 const 키워드를 사용하면 된다.
+
+const int value = 5;
+const int* ptr = &value; // this is okay, ptr is a non-const pointer that is pointing to a "const int"
+*ptr = 6; // not allowed, we can't change a const value
+위 예제에서 ptr은 const int를 가리킨다.
+
+
+int value = 5; // value is not constant
+const int* ptr = &value; // this is still okay
+상수 변수에 대한 포인터는 상수가 아닌 변수를 가리킬 수 있다.
+상수 변수에 대한 포인터는 변수가 초기에 const로 정의되었는지에 관계 없이 포인터를 통해 접근할 때 변수를 상수로 취급한다.
+
+가능한 예제>
+int value = 5;
+const int* ptr = &value; // ptr points to a "const int"
+value = 6; // the value is non-const when accessed through a non-const identifier
+
+불가능 예제>
+int value = 5;
+const int* ptr = &value; // ptr points to a "const int"
+*ptr = 6; // ptr treats its value as const, so changing the value through ptr is not legal
+상수를 가리키는 포인터는 상수를 가리킬 뿐, 상수 자체가 아니므로 다른 값을 가리킬 수 있다.
+
+int value1 = 5;
+const int* ptr = &value1; // ptr points to a const int
+
+int value2 = 6;
+ptr = &value2; // okay, ptr now points at some other const int
+
+
+[상수 포인터 (Const pointer)]
+포인터 자체를 상수로 만들 수 있다.
+상수 포인터는 초기화 후에 가리키는 주소를 변경할 수 없는 포인터다.
+상수 포인터를 선언하려면 자료형 뒤에 const 키워드를 사용하면 된다.
+
+int value = 5;
+int* const ptr = &value;
+일반 상수 변수와 마찬가지로 상수 포인터는 선언 시 초기화해야 한다.
+즉, 상수 포인터는 항상 같은 주소를 가리킨다.
+
+int value1 = 5;
+int value2 = 6;
+
+int* const ptr = &value1; // okay, the const pointer is initialized to the address of value1
+ptr = &value2; // not okay, once initialized, a const pointer can not be changed.
+포인터가 상수일 뿐, 가리키는 변수는 상수가 아니므로 포인터를 역참조하여 값을 변경하는 것은 가능하다.
+
+int value = 5;
+int* const ptr = &value; // ptr will always point to value
+*ptr = 6; // allowed, since ptr points to a non-const int
+상수를 가리키는 상수 포인터 (Const pointer to a const value)
+마지막으로, 자료형 앞뒤에 const 키워드를 사용해서 상수를 가리키는 상수 포인터를 선언할 수 있다.
+
+int value = 5;
+const int *const ptr = &value;
+상수를 가리키는 상수 포인터는 다른 주소를 가리키도록 수정할 수 없으며, 역참조를 통해 값을 수정할 수도 없다.
+
+요약 (Summary)
+비-상수 포인터는 다른 주소를 가리키도록 수정할 수 있다.
+상수 포인터는 항상 같은 주소를 가리키며, 가리키는 주소를 수정할 수 없다.
+상수를 가리키지 않는 포인터는 역참조를 통해 값을 변경할 수 있고, 상수값을 가리킬 수 없다.
+상수를 가리키는 포인터는 역참조를 통해 값을 변경할 수 없다.
+int value = 5;
+const int* ptr1 = &value; // ptr1 points to a "const int", so this is a pointer to a const value.
+int* const ptr2 = &value; // ptr2 points to an "int", so this is a const pointer to a non-const value.
+const int* const ptr3 = &value; // ptr3 points to a "const int", so this is a const pointer to a const value.
+상수를 가리키는 포인터는 주로 함수가 전달된 인수를 실수로 변경하지 않기 위해 매개 변수(Ex. 배열을 함수에 전달)에서 사용된다.
+
+
